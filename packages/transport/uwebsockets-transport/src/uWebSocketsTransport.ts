@@ -5,6 +5,7 @@ import { RivetClient } from "@rivet-gg/api";
 
 import {
 	DummyServer,
+	ErrorCode,
 	matchMaker,
 	Transport,
 	debugAndPrintError,
@@ -24,6 +25,7 @@ type RawWebSocketClient = uWebSockets.WebSocket & {
 
 export class uWebSocketsTransport extends Transport {
 	public rivet: RivetClient;
+	public rivetPlayerToken: string;
 
 	public app: uWebSockets.TemplatedApp;
 
@@ -93,14 +95,14 @@ export class uWebSocketsTransport extends Transport {
 						headers,
 						connection: {
 							remoteAddress: Buffer.from(
-								res.getRemoteAddressAsText()
+								res.getRemoteAddressAsText(),
 							).toString(),
 						},
 					},
 					req.getHeader("sec-websocket-key"),
 					req.getHeader("sec-websocket-protocol"),
 					req.getHeader("sec-websocket-extensions"),
-					context
+					context,
 				);
 			},
 
@@ -113,7 +115,11 @@ export class uWebSocketsTransport extends Transport {
 			//     ws.pingCount = 0;
 			// },
 
-			close: (ws: RawWebSocketClient, code: number, message: ArrayBuffer) => {
+			close: (
+				ws: RawWebSocketClient,
+				code: number,
+				message: ArrayBuffer,
+			) => {
 				// remove from client list
 				spliceOne(this.clients, this.clients.indexOf(ws));
 
@@ -124,12 +130,24 @@ export class uWebSocketsTransport extends Transport {
 					// emit 'close' on wrapper
 					clientWrapper.emit("close", code);
 				}
+
+				this.rivet.matchmaker.players
+					.disconnected({
+						playerToken: this.rivetPlayerToken,
+					})
+					.catch((err) =>
+						console.warn(
+							"[Rivet] Failed to disconnect player",
+							err,
+						),
+					);
+				console.log("[Rivet] Player disconnected");
 			},
 
 			message: (
 				ws: RawWebSocketClient,
 				message: ArrayBuffer,
-				isBinary: boolean
+				isBinary: boolean,
 			) => {
 				// emit 'close' on wrapper
 				this.clientWrappers
@@ -137,13 +155,15 @@ export class uWebSocketsTransport extends Transport {
 					?.emit("message", Buffer.from(message.slice(0)));
 			},
 		});
+
+		this.registerMatchMakeRequest();
 	}
 
 	public listen(
 		port: number,
 		hostname?: string,
 		backlog?: number,
-		listeningListener?: () => void
+		listeningListener?: () => void,
 	) {
 		this.app.listen(port, (listeningSocket: any) => {
 			this._listeningSocket = listeningSocket;
@@ -163,7 +183,10 @@ export class uWebSocketsTransport extends Transport {
 	public simulateLatency(milliseconds: number) {
 		const originalRawSend = uWebSocketClient.prototype.raw;
 		uWebSocketClient.prototype.raw = function () {
-			setTimeout(() => originalRawSend.apply(this, arguments), milliseconds);
+			setTimeout(
+				() => originalRawSend.apply(this, arguments),
+				milliseconds,
+			);
 		};
 	}
 
@@ -179,14 +202,18 @@ export class uWebSocketsTransport extends Transport {
 		const queryParsed = querystring.parse(query);
 		const playerToken = queryParsed.playerToken as string;
 		const sessionId = queryParsed.sessionId as string;
-		const processAndRoomId = url.match(/\/[a-zA-Z0-9_\-]+\/([a-zA-Z0-9_\-]+)$/);
+		const processAndRoomId = url.match(
+			/\/[a-zA-Z0-9_\-]+\/([a-zA-Z0-9_\-]+)$/,
+		);
 		const roomId = processAndRoomId && processAndRoomId[1];
 
 		// Validate Rivet player
 		try {
 			await this.rivet.matchmaker.players.connected({ playerToken });
+			this.rivetPlayerToken = playerToken;
+			console.log("[Rivet] Player connected");
 		} catch (err) {
-			console.warn("Failed to connect player to Rivet", err);
+			console.warn("[Rivet] Failed to connect player", err);
 			rawClient.close();
 			return;
 		}
@@ -203,12 +230,184 @@ export class uWebSocketsTransport extends Transport {
 				throw new Error("seat reservation expired.");
 			}
 
-			await room._onJoin(client, rawClient as unknown as http.IncomingMessage);
+			await room._onJoin(
+				client,
+				rawClient as unknown as http.IncomingMessage,
+			);
 		} catch (e) {
 			debugAndPrintError(e);
 
 			// send error code to client then terminate
 			client.error(e.code, e.message, () => rawClient.close());
 		}
+	}
+
+	protected registerMatchMakeRequest() {
+		const headers = {
+			"Access-Control-Allow-Headers":
+				"Origin, X-Requested-With, Content-Type, Accept",
+			"Access-Control-Allow-Methods": "OPTIONS, POST, GET",
+			"Access-Control-Allow-Origin": "*",
+			"Access-Control-Max-Age": 2592000,
+			// ...
+		};
+
+		// TODO: DRY with Server.ts
+		const matchmakeRoute = "matchmake";
+		const allowedRoomNameChars = /([a-zA-Z_\-0-9]+)/gi;
+
+		const writeHeaders = (res: uWebSockets.HttpResponse) => {
+			// skip if aborted
+			if (res.aborted) {
+				return;
+			}
+
+			for (const header in headers) {
+				res.writeHeader(header, headers[header].toString());
+			}
+
+			return true;
+		};
+
+		const writeError = (
+			res: uWebSockets.HttpResponse,
+			error: { code: number; error: string },
+		) => {
+			// skip if aborted
+			if (res.aborted) {
+				return;
+			}
+
+			res.writeStatus("406 Not Acceptable");
+			res.end(JSON.stringify(error));
+		};
+
+		const onAborted = (res: uWebSockets.HttpResponse) => {
+			res.aborted = true;
+		};
+
+		this.app.options("/matchmake/*", (res, req) => {
+			res.onAborted(() => onAborted(res));
+
+			if (writeHeaders(res)) {
+				res.writeStatus("204 No Content");
+				res.end();
+			}
+		});
+
+		this.app.post("/matchmake/*", (res, req) => {
+			res.onAborted(() => onAborted(res));
+
+			writeHeaders(res);
+			res.writeHeader("Content-Type", "application/json");
+
+			const url = req.getUrl();
+			const matchedParams = url.match(allowedRoomNameChars);
+			const matchmakeIndex = matchedParams.indexOf(matchmakeRoute);
+
+			// read json body
+			this.readJson(res, async (clientOptions) => {
+				try {
+					if (clientOptions === undefined) {
+						throw new Error("invalid JSON input");
+					}
+
+					const method = matchedParams[matchmakeIndex + 1];
+					const name = matchedParams[matchmakeIndex + 2] || "";
+					const response = await matchMaker.controller.invokeMethod(
+						method,
+						name,
+						clientOptions,
+					);
+					if (!res.aborted) {
+						res.writeStatus("200 OK");
+						res.end(JSON.stringify(response));
+					}
+				} catch (e) {
+					debugAndPrintError(e);
+					writeError(res, {
+						code: e.code || ErrorCode.MATCHMAKE_UNHANDLED,
+						error: e.message,
+					});
+				}
+			});
+		});
+
+		// this.app.any("/*", (res, req) => {
+		//     res.onAborted(() => onAborted(req));
+		//     res.writeStatus("200 OK");
+		// });
+
+		this.app.get("/matchmake/*", async (res, req) => {
+			res.onAborted(() => onAborted(res));
+
+			writeHeaders(res);
+			res.writeHeader("Content-Type", "application/json");
+
+			const url = req.getUrl();
+			const matchedParams = url.match(allowedRoomNameChars);
+			const roomName =
+				matchedParams.length > 1
+					? matchedParams[matchedParams.length - 1]
+					: "";
+
+			try {
+				const response = await matchMaker.controller.getAvailableRooms(
+					roomName || "",
+				);
+				if (!res.aborted) {
+					res.writeStatus("200 OK");
+					res.end(JSON.stringify(response));
+				}
+			} catch (e) {
+				debugAndPrintError(e);
+				writeError(res, {
+					code: e.code || ErrorCode.MATCHMAKE_UNHANDLED,
+					error: e.message,
+				});
+			}
+		});
+	}
+
+	/* Helper function for reading a posted JSON body */
+	/* Extracted from https://github.com/uNetworking/uWebSockets.js/blob/master/examples/JsonPost.js */
+	private readJson(res: uWebSockets.HttpResponse, cb: (json: any) => void) {
+		let buffer: any;
+		/* Register data cb */
+		res.onData((ab, isLast) => {
+			let chunk = Buffer.from(ab);
+			if (isLast) {
+				let json;
+				if (buffer) {
+					try {
+						// @ts-ignore
+						json = JSON.parse(Buffer.concat([buffer, chunk]));
+					} catch (e) {
+						/* res.close calls onAborted */
+						// res.close();
+						cb(undefined);
+						return;
+					}
+					cb(json);
+				} else {
+					try {
+						// @ts-ignore
+						json = JSON.parse(chunk);
+					} catch (e) {
+						/* res.close calls onAborted */
+						// res.close();
+						cb(undefined);
+						return;
+					}
+					cb(json);
+				}
+			} else {
+				if (buffer) {
+					buffer = Buffer.concat([buffer, chunk]);
+				} else {
+					buffer = Buffer.concat([chunk]);
+				}
+			}
+		});
 	}
 }
