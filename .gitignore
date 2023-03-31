@@ -1,0 +1,10 @@
+*.log
+.DS_Store
+node_modules
+yarn.lock
+
+**/build/
+
+packages/**/LICENSE
+packages/**/README.md
+

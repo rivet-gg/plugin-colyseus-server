@@ -1,0 +1,39 @@
+{
+	"name": "@rivet-gg/plugin-colyseus-monorepo",
+	"private": true,
+	"type": "module",
+	"workspaces": ["packages/*", "packages/transport/*"],
+	"scripts": {
+		"build": "rollup -c && lerna run build",
+		"clean": "lerna clean",
+		"boot": "lerna bootstrap",
+		"example": "lerna run start --scope @colyseus/example --stream",
+		"bump": "lerna version prerelease --force-publish --no-push --no-git-tag-version",
+		"publish-alpha": "lerna publish prerelease --no-git-tag-version --dist-tag alpha",
+		"publish-stable": "lerna publish patch --no-git-tag-version",
+		"release": "lerna version --force-publish --no-push --no-git-tag-version",
+		"release-from-package": "lerna publish from-package",
+		"preversion": "npm run build",
+		"postinstall": "npm run boot",
+		"format": "prettier --write ."
+	},
+	"devDependencies": {
+		"@lerna/batch-packages": "^3.16.0",
+		"@lerna/filter-packages": "^4.0.0",
+		"@lerna/project": "^4.0.0",
+		"@rollup/plugin-commonjs": "^17.1.0",
+		"@rollup/plugin-json": "^4.1.0",
+		"@rollup/plugin-node-resolve": "^11.2.0",
+		"@rollup/plugin-typescript": "^11.0.0",
+		"@types/node": "^16.3.2",
+		"lerna": "^4.0.0",
+		"prettier": "^2.8.7",
+		"rollup": "^2.79.1",
+		"rollup-plugin-node-externals": "^2.2.0",
+		"ts-node": "^7.0.1",
+		"ts-node-dev": "^1.1.6",
+		"tslib": "^2.5.0",
+		"tslint": "^5.11.0",
+		"typescript": "^5.0.3"
+	}
+}

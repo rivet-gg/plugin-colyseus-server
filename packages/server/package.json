@@ -1,0 +1,29 @@
+{
+	"name": "@rivet-gg/plugin-colyseus-server",
+	"version": "0.0.1",
+	"description": "Rivet + Colyseus Server Plugin",
+	"input": "./src/index.ts",
+	"main": "./build/index.js",
+	"module": "./build/index.mjs",
+	"typings": "./build/src/index.d.ts",
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/rivet-gg/colyseus-plugins.git"
+	},
+	"keywords": ["rivet", "colyseus", "multiplayer"],
+	"author": ["Rivet Gaming, Inc."],
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/rivet-gg/colyseus-plugins/issues"
+	},
+	"files": ["build", "LICENSE", "README.md"],
+	"homepage": "https://rivet.gg/",
+	"dependencies": {
+		"@colyseus/core": "^0.14.36",
+		"@rivet-gg/api": "^0.0.1-rc15",
+		"@rivet-gg/plugin-colyseus-uwebsockets-transport": "^0.0.1"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}
