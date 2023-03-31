@@ -2,9 +2,24 @@
 
 Plugin to Colyseus for easy development with Rivet.
 
-## Coming from Colyseus Arena?
+## 🪦 Coming from Colyseus Arena?
 
 Colyseus Arena was shut down March 31st, 2023. This plugin helps make the migration games to Rivet quickly and easily.
+
+## Example
+
+See a more detailed example [here](https://github.com/rivet-gg/plugin-colyseus-examples).
+
+```typescript
+import { listen } from "../src/index";
+
+export default listen({
+	async initializeGameServer(gameServer) {
+		gameServer.define("chat", ChatRoom).enableRealtimeListing();
+	},
+});
+
+```
 
 ## FAQ
 
