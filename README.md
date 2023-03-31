@@ -1,16 +1,16 @@
-# Rivet Colyseus Plugin
+# 🔩 Rivet Colyseus Plugin
 
 Plugin to Colyseus for easy development with Rivet.
 
 ## Coming from Colyseus Arena?
 
-Colyseus Arena was shut down March 31st, 2023. This plugin helps make the migration to Rivet seamless.
+Colyseus Arena was shut down March 31st, 2023. This plugin helps make the migration games to Rivet quickly and easily.
 
 ## FAQ
 
-**What about `initializeExpress`?**
+**What happened to `initializeExpress`?**
 
-We support deploying static files with [Rivet CDN](https://docs.rivet.gg/cdn/introduction).
+Rivet game servers run only game code and nothing else. We support deploying static content with [Rivet CDN](https://docs.rivet.gg/cdn/introduction).
 
 If you need to run a custom API server, take a look at [Fly.io](https://docs.rivet.gg/cdn/introduction) or [Railway](https://railway.app/).
 
