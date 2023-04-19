@@ -8,3 +8,7 @@ yarn.lock
 packages/**/LICENSE
 packages/**/README.md
 
+
+### Rivet ###
+.rivet/
+.env

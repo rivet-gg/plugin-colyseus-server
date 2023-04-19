@@ -6,17 +6,30 @@
 	"main": "./build/index.js",
 	"module": "./build/index.mjs",
 	"typings": "./build/src/index.d.ts",
+	"scripts": {
+		"start": "ts-node-dev example/index.ts"
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+ssh://git@github.com/rivet-gg/colyseus-plugins.git"
 	},
-	"keywords": ["rivet", "colyseus", "multiplayer"],
-	"author": ["Rivet Gaming, Inc."],
+	"keywords": [
+		"rivet",
+		"colyseus",
+		"multiplayer"
+	],
+	"author": [
+		"Rivet Gaming, Inc."
+	],
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/rivet-gg/colyseus-plugins/issues"
 	},
-	"files": ["build", "LICENSE", "README.md"],
+	"files": [
+		"build",
+		"LICENSE",
+		"README.md"
+	],
 	"homepage": "https://rivet.gg/",
 	"dependencies": {
 		"@colyseus/core": "^0.14.36",
@@ -25,5 +38,8 @@
 	},
 	"publishConfig": {
 		"access": "public"
+	},
+	"devDependencies": {
+		"dotenv": "^16.0.3"
 	}
 }

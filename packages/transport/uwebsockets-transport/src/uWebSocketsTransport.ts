@@ -286,6 +286,11 @@ export class uWebSocketsTransport extends Transport {
 			res.aborted = true;
 		};
 
+		this.app.get("/", (res, req) => {
+			res.writeStatus("200 OK");
+			res.end("Colyseus server");
+		});
+
 		this.app.options("/matchmake/*", (res, req) => {
 			res.onAborted(() => onAborted(res));
 

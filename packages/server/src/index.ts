@@ -34,7 +34,8 @@ export async function listen(
 	options.displayLogs = options.displayLogs ?? true;
 
 	let transport =
-		options.initializeTransport?.({ rivet }) ?? createDefaultTransport(rivet);
+		options.initializeTransport?.({ rivet }) ??
+		createDefaultTransport(rivet);
 
 	const gameServer = new Server({
 		...serverOptions,

@@ -7,7 +7,7 @@
 		"build": "rollup -c && lerna run build",
 		"clean": "lerna clean",
 		"boot": "lerna bootstrap",
-		"example": "lerna run start --scope @colyseus/example --stream",
+		"example": "lerna run start --scope @rivet-gg/plugin-colyseus-server --stream",
 		"bump": "lerna version prerelease --force-publish --no-push --no-git-tag-version",
 		"publish-alpha": "lerna publish prerelease --no-git-tag-version --dist-tag alpha",
 		"publish-stable": "lerna publish patch --no-git-tag-version",
