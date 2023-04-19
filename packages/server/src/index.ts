@@ -53,6 +53,8 @@ export async function listen(
 
 	log(options, `⚔️  Listening on ws://localhost:${port}`);
 
+	log(options, "[Rivet] Token:", process.env.RIVET_LOBBY_TOKEN);
+
 	// Notify Rivet that server can start accepting players
 	await rivet.matchmaker.lobbies.ready();
 	log(options, "[Rivet] Lobby ready");
