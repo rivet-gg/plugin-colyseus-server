@@ -20,20 +20,20 @@ export default listen({
 });
 ```
 
-## Running Example Server
+## Running Test Server
 
-The example server is used for manual testing for development. For more comprehensive examples, check out the [Colyseus examples repo](https://github.com/rivet-gg/plugin-colyseus-examples).
+The test server is used for manual testing for development. For more comprehensive examples, check out the [Colyseus examples repo](https://github.com/rivet-gg/plugin-colyseus-examples).
 
-Project setup:
+**Project setup**
 
 1. Create a game on the [Rivet Developer Dashboard](https://hub.rivet.gg/developer/dashboard)
 1. Install the [Rivet CLI](https://github.com/rivet-gg/cli)
 1. Run `rivet init --recommend` to link your game
 
-Running example server:
+**Running test server**
 
-1. Run the server in one terminal: `yarn run example`
-1. Run the client example client [here](https://github.com/rivet-gg/plugin-colyseus-javascript)
+1. Run the server in one terminal: `yarn run test-server`
+1. Run the client test client [here](https://github.com/rivet-gg/plugin-colyseus-javascript)
 
 ## FAQ
 
