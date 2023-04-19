@@ -18,8 +18,22 @@ export default listen({
 		gameServer.define("chat", ChatRoom).enableRealtimeListing();
 	},
 });
-
 ```
+
+## Running Example Server
+
+The example server is used for manual testing for development. For more comprehensive examples, check out the [Colyseus examples repo](https://github.com/rivet-gg/plugin-colyseus-examples).
+
+Project setup:
+
+1. Create a game on the [Rivet Developer Dashboard](https://hub.rivet.gg/developer/dashboard)
+1. Install the [Rivet CLI](https://github.com/rivet-gg/cli)
+1. Run `rivet init --recommend` to link your game
+
+Running example server:
+
+1. Run the server in one terminal: `yarn run example`
+1. Run the client example client [here](https://github.com/rivet-gg/plugin-colyseus-javascript)
 
 ## FAQ
 
