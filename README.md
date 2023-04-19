@@ -33,7 +33,7 @@ The test server is used for manual testing for development. For more comprehensi
 **Running test server**
 
 1. Run the server in one terminal: `yarn run test-server`
-1. Run the client test client [here](https://github.com/rivet-gg/plugin-colyseus-javascript)
+1. Run the test client [here](https://github.com/rivet-gg/plugin-colyseus-javascript)
 
 ## FAQ
 
