@@ -1,6 +1,6 @@
 {
 	"name": "@rivet-gg/plugin-colyseus-uwebsockets-transport",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"input": "./src/index.ts",
 	"main": "./build/index.js",
 	"module": "./build/index.mjs",
