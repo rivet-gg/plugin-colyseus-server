@@ -1,6 +1,6 @@
 {
 	"name": "@rivet-gg/plugin-colyseus-uwebsockets-transport",
-	"version": "0.0.1",
+	"version": "0.0.3-rc.3",
 	"input": "./src/index.ts",
 	"main": "./build/index.js",
 	"module": "./build/index.mjs",
@@ -8,13 +8,27 @@
 	"dependencies": {
 		"@colyseus/core": "^0.14.20",
 		"@colyseus/schema": "^1.0.15",
-		"uWebSockets.js": "github:uNetworking/uWebSockets.js#v19.2.0",
-		"@rivet-gg/api": "^0.0.1-rc17"
+		"@rivet-gg/api": "^0.0.1-rc17",
+		"uWebSockets.js": "github:uNetworking/uWebSockets.js#v19.2.0"
 	},
-	"author": ["Endel Dreyer", "Rivet Gaming, Inc."],
+	"author": [
+		"Endel Dreyer",
+		"Rivet Gaming, Inc."
+	],
 	"license": "MIT",
-	"keywords": ["rivet", "colyseus", "transport", "websockets", "uws", "native"],
-	"files": ["build", "LICENSE", "README.md"],
+	"keywords": [
+		"rivet",
+		"colyseus",
+		"transport",
+		"websockets",
+		"uws",
+		"native"
+	],
+	"files": [
+		"build",
+		"LICENSE",
+		"README.md"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git://github.com/rivet-gg/colyseus-plugins.git"
@@ -22,5 +36,6 @@
 	"homepage": "https://rivet.gg/",
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"gitHead": "f01948d2194b870ec64e17d7633cd66006b58e95"
 }
