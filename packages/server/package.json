@@ -1,6 +1,6 @@
 {
 	"name": "@rivet-gg/plugin-colyseus-server",
-	"version": "0.0.1",
+	"version": "0.2.0",
 	"description": "Rivet + Colyseus Server Plugin",
 	"input": "./src/index.ts",
 	"main": "./build/index.js",
@@ -33,13 +33,14 @@
 	"homepage": "https://rivet.gg/",
 	"dependencies": {
 		"@colyseus/core": "^0.14.36",
-		"@rivet-gg/api": "^0.0.1-rc15",
-		"@rivet-gg/plugin-colyseus-uwebsockets-transport": "^0.0.1"
+		"@rivet-gg/api": "^24.1.2",
+		"@rivet-gg/plugin-colyseus-uwebsockets-transport": "^0.1.0"
 	},
 	"publishConfig": {
 		"access": "public"
 	},
 	"devDependencies": {
 		"dotenv": "^16.0.3"
-	}
+	},
+	"gitHead": "f01948d2194b870ec64e17d7633cd66006b58e95"
 }
