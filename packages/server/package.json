@@ -1,6 +1,6 @@
 {
 	"name": "@rivet-gg/plugin-colyseus-server",
-	"version": "0.1.2-rc.4",
+	"version": "0.1.2-rc.5",
 	"description": "Rivet + Colyseus Server Plugin",
 	"input": "./src/index.ts",
 	"main": "./build/index.js",
@@ -34,7 +34,7 @@
 	"dependencies": {
 		"@colyseus/core": "^0.14.36",
 		"@rivet-gg/api": "^0.0.1-rc15",
-		"@rivet-gg/plugin-colyseus-uwebsockets-transport": "^0.0.3-rc.3"
+		"@rivet-gg/plugin-colyseus-uwebsockets-transport": "^0.0.3-rc.4"
 	},
 	"publishConfig": {
 		"access": "public"

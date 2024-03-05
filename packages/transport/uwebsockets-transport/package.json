@@ -1,6 +1,6 @@
 {
 	"name": "@rivet-gg/plugin-colyseus-uwebsockets-transport",
-	"version": "0.0.3-rc.3",
+	"version": "0.0.3-rc.4",
 	"input": "./src/index.ts",
 	"main": "./build/index.js",
 	"module": "./build/index.mjs",
@@ -9,7 +9,7 @@
 		"@colyseus/core": "^0.14.20",
 		"@colyseus/schema": "^1.0.15",
 		"@rivet-gg/api": "^0.0.1-rc17",
-		"uWebSockets.js": "github:uNetworking/uWebSockets.js#v19.2.0"
+		"uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.42.0"
 	},
 	"author": [
 		"Endel Dreyer",
