@@ -28,7 +28,7 @@ export async function listen(
 ) {
 	let rivet =
 		options.rivetClient ??
-		new RivetClient({ token: process.env.RIVET_LOBBY_TOKEN });
+		new RivetClient({ token: process.env.RIVET_TOKEN });
 
 	const serverOptions = options.options ?? {};
 	options.displayLogs = options.displayLogs ?? true;
@@ -53,7 +53,7 @@ export async function listen(
 
 	log(options, `⚔️  Listening on ws://localhost:${port}`);
 
-	log(options, "[Rivet] Token:", process.env.RIVET_LOBBY_TOKEN);
+	log(options, "[Rivet] Token:", process.env.RIVET_TOKEN);
 
 	// Notify Rivet that server can start accepting players
 	await rivet.matchmaker.lobbies.ready();
